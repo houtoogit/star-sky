@@ -9,7 +9,7 @@ spring:
     # Alibaba数据库连接池
     druid:
       druidClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://175.24.179.22:3306/member?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT&useSSL=false
+      url:
       username: ENC(PO6eA3II64rvq6d+AqhupTyFvdJLdMS3tIkzIG2Quy7WzHmQTOJABiykKqW9ItUm)
       password: ENC(OIX/CAXUG+jTzLl+tTTYLW5D+ppyjWbYKjA9snlUmCT0iGBATWrPI+ibVgJmpa9p)
 
