@@ -1,0 +1,32 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  #DB Configuration
+  datasource:
+    # Alibaba数据库连接池
+    druid:
+      druidClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://175.24.179.22:3306/member?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT&useSSL=false
+      username: ENC(PO6eA3II64rvq6d+AqhupTyFvdJLdMS3tIkzIG2Quy7WzHmQTOJABiykKqW9ItUm)
+      password: ENC(OIX/CAXUG+jTzLl+tTTYLW5D+ppyjWbYKjA9snlUmCT0iGBATWrPI+ibVgJmpa9p)
+
+      maxActive: 30 #最大连接数
+      minIdle: 5 #最小连接数
+      maxWait: 10000 #获取连接的最大等待时间
+      validationgQuery: SELECT 'X' #解决mysql8小时的问题
+      timeBetweenEvictionRunsMillis: 60000 #空闲连接的检查时间间隔
+      minEvictableIdleTimeMillis: 300000 #空闲连接最小空闲时间
+
+  # SpringData JPA
+  jpa:
+    database: mysql
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQLDialect # 数据库方言
+    hibernate:
+      ddl-auto: update # 自动更新数据库
+    # 性能调优
+    #显示SQL执行语句
+    show-sql: true
