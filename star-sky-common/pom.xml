@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.star.sky.member</groupId>
-    <artifactId>star-sky-member</artifactId>
+    <groupId>com.star.sky.common</groupId>
+    <artifactId>star-sky-common</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -19,9 +19,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.star.sky.common</groupId>
-            <artifactId>star-sky-common</artifactId>
-            <version>${star-sky.version}</version>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

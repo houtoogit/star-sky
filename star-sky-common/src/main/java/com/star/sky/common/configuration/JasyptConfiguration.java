@@ -1,5 +1,6 @@
-package com.star.sky.member.configuration;
+package com.star.sky.common.configuration;
 
+import lombok.NoArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@NoArgsConstructor
 public class JasyptConfiguration implements StringEncryptor {
 
     public static final String PBE_ALGORITHMS_MD5_DES = "PBEWITHMD5ANDDES";
@@ -17,18 +19,6 @@ public class JasyptConfiguration implements StringEncryptor {
     private String password;
 
     private String algorithm = PBE_WITH_HMAC_SHA512_AES_256;
-
-    public JasyptConfiguration() {
-    }
-
-    public JasyptConfiguration(String password) {
-        this.password = password;
-    }
-
-    public JasyptConfiguration(String password, String algorithm) {
-        this.password = password;
-        this.algorithm = algorithm;
-    }
 
     @Override
     public String encrypt(String encryptedStr) {

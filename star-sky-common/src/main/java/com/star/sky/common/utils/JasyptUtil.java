@@ -1,10 +1,8 @@
-package com.star.sky.member.utils;
+package com.star.sky.common.utils;
 
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JasyptUtil {
 
     public static final String PBE_ALGORITHMS_MD5_DES = "PBEWITHMD5ANDDES";

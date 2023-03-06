@@ -6,6 +6,7 @@
 
     <modules>
         <module>star-sky-member</module>
+        <module>star-sky-common</module>
     </modules>
 
     <parent>
@@ -17,14 +18,15 @@
 
     <groupId>com.star.sky</groupId>
     <artifactId>star-sky</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${star-sky.version}</version>
     <name>star-sky</name>
     <packaging>pom</packaging>
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <pdroject.build.sourceEncoding>UTF-8</pdroject.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <star-sky.version>5.0-SNAPSHOT</star-sky.version>
         <mysql-connector.version>8.0.15</mysql-connector.version>
         <druid.version>1.1.10</druid.version>
         <lombok.version>1.18.4</lombok.version>
