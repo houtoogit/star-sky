@@ -26,7 +26,7 @@
     <properties>
         <pdroject.build.sourceEncoding>UTF-8</pdroject.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <star-sky.version>5.0-SNAPSHOT</star-sky.version>
+        <star-sky.version>1.0-SNAPSHOT</star-sky.version>
         <mysql-connector.version>8.0.15</mysql-connector.version>
         <druid.version>1.1.10</druid.version>
         <lombok.version>1.18.4</lombok.version>
@@ -35,6 +35,7 @@
         <jasypt.version>3.0.3</jasypt.version>
         <powermock-junit4.version>2.0.5</powermock-junit4.version>
         <powermock-mockito2.version>2.0.5</powermock-mockito2.version>
+        <commons-lang3.version>3.7</commons-lang3.version>
     </properties>
 
     <dependencies>
@@ -69,6 +70,10 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
 
@@ -113,6 +118,11 @@
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-module-junit4</artifactId>
                 <version>${powermock-junit4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
