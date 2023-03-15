@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class GlobalExceptionHandler {
 
     @ResponseBody
-    @ExceptionHandler(value = ApiException.class)
-    public ResponseResult handle(ApiException e) {
-        if (e.getErrorCode() != null) {
-            return ResponseResult.failed(e.getErrorCode());
+    @ExceptionHandler(value = StarSkyException.class)
+    public ResponseResult<String> handle(StarSkyException e) {
+        if (e.getStatus() != null) {
+            return ResponseResult.failed(e.getStatus());
         }
         return ResponseResult.failed(e.getMessage());
     }

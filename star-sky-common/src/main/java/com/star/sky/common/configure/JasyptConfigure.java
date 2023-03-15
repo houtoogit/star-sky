@@ -1,4 +1,4 @@
-package com.star.sky.common.configuration;
+package com.star.sky.common.configure;
 
 import lombok.NoArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
@@ -10,15 +10,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @NoArgsConstructor
-public class JasyptConfiguration implements StringEncryptor {
+public class JasyptConfigure implements StringEncryptor {
 
     public static final String PBE_ALGORITHMS_MD5_DES = "PBEWITHMD5ANDDES";
     public static final String PBE_WITH_HMAC_SHA512_AES_256 = "PBEWITHHMACSHA512ANDAES_256";
 
     @Value("${jasypt.encryptor.password}")
     private String password;
-
-    private String algorithm = PBE_WITH_HMAC_SHA512_AES_256;
 
     @Override
     public String encrypt(String encryptedStr) {
@@ -35,7 +33,7 @@ public class JasyptConfiguration implements StringEncryptor {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         config.setPoolSize("1");
         config.setPassword(password);
-        config.setAlgorithm(algorithm);
+        config.setAlgorithm(PBE_WITH_HMAC_SHA512_AES_256);
         config.setProviderName("SunJCE");
         config.setStringOutputType("base64");
         config.setKeyObtentionIterations("1000");
@@ -46,8 +44,8 @@ public class JasyptConfiguration implements StringEncryptor {
     }
 
     @Bean("jasyptStringEncryptor")
-    public JasyptConfiguration getJasyptConfiguration() {
-        return new JasyptConfiguration();
+    public JasyptConfigure getJasyptConfiguration() {
+        return new JasyptConfigure();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.star.sky.common.beans;
+package com.star.sky.common.entities;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.star.sky.common.utils;
 
-import com.star.sky.common.beans.UpgradeRecord;
+import com.star.sky.common.entities.UpgradeRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -38,14 +38,13 @@ public class DBUtil {
         DBUtil.insertUpgradeRecord(record, connection);
     }
 
-    private static UpgradeRecord installDeploy(Connection connection, UpgradeRecord record) {
+    private static void installDeploy(Connection connection, UpgradeRecord record) {
         record.setUpgradeType(INSTALL);
         record.setSqlFiles(INSTALL_SQL_PATH);
         DBUtil.executeSqlScriptFile(INSTALL_SQL_PATH, connection);
-        return record;
     }
 
-    private static UpgradeRecord upgradeDeploy(Connection connection, UpgradeRecord record) throws IOException {
+    private static void upgradeDeploy(Connection connection, UpgradeRecord record) throws IOException {
         record.setUpgradeType(UPGRADE);
         File file = new ClassPathResource(SQL_PATH).getFile();
         File[] upgrades = file.listFiles(sql -> sql.getName().startsWith(UPGRADE));
@@ -57,7 +56,6 @@ public class DBUtil {
             record.setSqlFiles(upgradeSqlPath);
             DBUtil.executeSqlScriptFile(upgradeSqlPath, connection);
         }
-        return record;
     }
 
     private static void createUpgradeRecordTableIfNotExists(Connection connection) throws SQLException {
@@ -92,8 +90,7 @@ public class DBUtil {
 
     private static EncodedResource getEncodedResource(String sqlPath) {
         ClassPathResource pathResource = new ClassPathResource(sqlPath);
-        EncodedResource encodedResource = new EncodedResource(pathResource, "utf-8");
-        return encodedResource;
+        return new EncodedResource(pathResource, "utf-8");
     }
 
 }
