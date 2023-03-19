@@ -1,7 +1,9 @@
 package com.star.sky.member.api;
 
 import com.star.sky.common.result.ResponseResult;
-import com.star.sky.common.utils.RSAUtil;
+import com.star.sky.common.utils.TokenUtil;
+import com.star.sky.member.entities.MemberBaseInfo;
+import com.star.sky.member.entities.ResponseToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +19,16 @@ public class ApiAccessController {
     }
 
     @PostMapping("/login")
-    public ResponseResult<Long> login(@RequestHeader("Access-Token") String access_token) throws Exception {
-        log.info("access_token is: {}", access_token);
-        String token = RSAUtil.decrypt(access_token, RSAUtil.getPrivateKey(RSAUtil.PRIVATE_KEY));
-        log.info("token is: {}", token);
-        return ResponseResult.success(System.currentTimeMillis());
+    public ResponseResult<ResponseToken> login(MemberBaseInfo baseInfo) {
+        return ResponseResult.success(new ResponseToken(TokenUtil.getToken(), baseInfo.getBase_phone(), 300));
+    }
+
+    @GetMapping("/get-member-info/{id}/{name}")
+    public ResponseResult<MemberBaseInfo> getMemberInfo() {
+//        String sign = DigestUtils.md5DigestAsHex((token + timestamp).getBytes());
+//        log.info("sign is: {}", sign);
+
+        return ResponseResult.success(new MemberBaseInfo());
     }
 
     @PostMapping("/logout")

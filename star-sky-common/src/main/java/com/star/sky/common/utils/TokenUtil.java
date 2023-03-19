@@ -9,7 +9,7 @@ public class TokenUtil {
     }
 
     public static String getToken() {
-        return RandomStringUtils.randomNumeric(10) + "_" + RandomStringUtils.randomAlphanumeric(16);
+        return RandomStringUtils.randomNumeric(10) + "_" + RandomStringUtils.randomAlphanumeric(32);
     }
 
 }
