@@ -20,6 +20,18 @@ spring:
       timeBetweenEvictionRunsMillis: 60000 #空闲连接的检查时间间隔
       minEvictableIdleTimeMillis: 300000 #空闲连接最小空闲时间
 
+  # Redis DB
+  redis:
+    host:
+    port:
+    password: ENC(OV5jIrEXN4meBShDOeGVtFmGXrb9Y0z2gLhCFDTVjqbZRE0Y7F0yoAAUxPxWgE+k)
+    database: 0
+    lettuce:
+      pool:
+        max-idle: 16
+        max-active: 32
+        min-idle: 8
+
   # SpringData JPA
   jpa:
     database: mysql

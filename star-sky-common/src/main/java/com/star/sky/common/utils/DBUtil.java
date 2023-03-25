@@ -28,7 +28,7 @@ public class DBUtil {
     private static final String CREATE_UPGRADE_RECORD_SQL = "CREATE TABLE IF NOT EXISTS application_upgrade_record(id INT NOT NULL AUTO_INCREMENT, sub_system VARCHAR(32) NOT NULL, app_version VARCHAR(32) NOT NULL, upgrade_time TIMESTAMP NOT NULL, upgrade_type VARCHAR(32) NOT NULL, sql_files VARCHAR(1024), PRIMARY KEY (id))";
 
 
-    public static synchronized void initDb(Connection connection, String subSystem, String currentVersion) throws SQLException, IOException {
+    public static void initDb(Connection connection, String subSystem, String currentVersion) throws SQLException, IOException {
         UpgradeRecord record = new UpgradeRecord(subSystem, currentVersion);
         DBUtil.createUpgradeRecordTableIfNotExists(connection);
         String lastVersion = DBUtil.queryLastAppVersion(connection, subSystem);

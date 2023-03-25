@@ -10,10 +10,10 @@ import java.util.concurrent.TimeUnit;
 public class ThreadUtil {
 
     public static ExecutorService workThread = new ThreadPoolExecutor(
-            5, 20,
+            5, 50,
             300L, TimeUnit.SECONDS,
             new ArrayBlockingQueue<>(1000),
-            new BasicThreadFactory.Builder().namingPattern("init-data-[%d]").build(),
+            new BasicThreadFactory.Builder().namingPattern("work-thread-[%d]").build(),
             new ThreadPoolExecutor.CallerRunsPolicy()
     );
 

@@ -3,10 +3,13 @@ package com.star.sky.member.entities;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class MemberBaseInfo {
+public class MemberBaseInfo implements Serializable {
+
+    private static final long serialVersionUID = -2889099802329294028L;
 
     private long id;
     private int base_uuid;
