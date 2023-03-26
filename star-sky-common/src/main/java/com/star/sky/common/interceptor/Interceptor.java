@@ -6,6 +6,8 @@ import com.star.sky.common.result.ResponseResult;
 import com.star.sky.common.utils.RSAUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -30,6 +32,9 @@ public class Interceptor implements HandlerInterceptor {
     private static final String POST = "POST";
     private static final String DELETE = "DELETE";
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         try {
@@ -41,20 +46,21 @@ public class Interceptor implements HandlerInterceptor {
 
             long current_timestamp = System.currentTimeMillis();
             long api_timestamp = Long.parseLong(RSAUtil.decrypt(access_token.substring(43), RSAUtil.getPrivateKey(RSAUtil.PRIVATE_KEY)));
-
             if (current_timestamp - api_timestamp > TIME_DIFF) throw new StarSkyException(HttpStatus.UNAUTHORIZED);
 
             // todo check token
             access_token = access_token.substring(0, 43);
+            Object cache_info = redisTemplate.opsForValue().get(access_token);
+            if (cache_info == null) throw new StarSkyException(HttpStatus.UNAUTHORIZED);
 
             List<String> signs = Stream.of(access_token, String.valueOf(api_timestamp)).collect(Collectors.toList());
 
-            if (GET.equals(method)) {
+            if (GET.equals(method) || DELETE.equals(method)) {
                 Map params = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
                 params.values().forEach(value -> signs.add(String.valueOf(value)));
             }
 
-            if (POST.equals(method) || PUT.equals(method) || DELETE.equals(method)) {
+            if (POST.equals(method) || PUT.equals(method)) {
                 Map<String, String[]> params = request.getParameterMap();
                 params.forEach((key, value) -> signs.add(String.valueOf(value[0])));
             }

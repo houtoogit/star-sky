@@ -16,4 +16,5 @@ public class ResponseToken {
         this.token_type = "access_token";
         this.access_token = access_token;
     }
+
 }

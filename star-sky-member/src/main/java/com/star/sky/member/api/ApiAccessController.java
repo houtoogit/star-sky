@@ -8,11 +8,16 @@ import com.star.sky.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
+
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/access")
 public class ApiAccessController {
@@ -21,12 +26,12 @@ public class ApiAccessController {
     private MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseResult<String> register() {
+    public ResponseResult<String> register(MemberBaseInfo baseInfo) {
         return ResponseResult.failed(HttpStatus.GATEWAY_TIMEOUT);
     }
 
     @PostMapping(value = "/login")
-    public ResponseResult<ResponseToken> login(MemberBaseInfo baseInfo) {
+    public ResponseResult<ResponseToken> login(@Valid MemberBaseInfo baseInfo) {
         MemberBaseInfo info = memberService.getInfo(baseInfo);
         return ResponseResult.success(new ResponseToken(TokenUtil.getToken(), info.getBase_phone(), 300));
     }

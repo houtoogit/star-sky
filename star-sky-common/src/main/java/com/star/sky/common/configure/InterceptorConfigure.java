@@ -14,6 +14,7 @@ public class InterceptorConfigure implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/access/register")
                 .excludePathPatterns("/access/login")
+                .excludePathPatterns("/**/error") // spring boot 全局异常捕获会请求 error，放行
                 .excludePathPatterns("/**/*.js")
                 .excludePathPatterns("/**/*.css")
                 .excludePathPatterns("/**/*.html");

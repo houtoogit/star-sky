@@ -18,20 +18,20 @@ public class ResponseResult<T> {
         return new ResponseResult<T>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), data);
     }
 
-    public static <T> ResponseResult<T> success(T data, String message) {
-        return new ResponseResult<T>(HttpStatus.OK.value(), message, data);
+    public static <T> ResponseResult<T> success(HttpStatus status, T data) {
+        return new ResponseResult<T>(status.value(), status.getReasonPhrase(), data);
     }
 
     public static <T> ResponseResult<T> failed(HttpStatus status) {
         return new ResponseResult<T>(status.value(), status.getReasonPhrase(), null);
     }
 
-    public static <T> ResponseResult<T> failed(HttpStatus status, String message) {
-        return new ResponseResult<T>(status.value(), message, null);
+    public static <T> ResponseResult<T> failed(T data) {
+        return new ResponseResult<T>(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), data);
     }
 
-    public static <T> ResponseResult<T> failed(String message) {
-        return new ResponseResult<T>(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, null);
+    public static <T> ResponseResult<T> failed(HttpStatus status, T data) {
+        return new ResponseResult<T>(status.value(), status.getReasonPhrase(), data);
     }
 
 }
