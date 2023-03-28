@@ -1,13 +1,14 @@
 package com.star.sky.member.api;
 
+import com.star.sky.common.entities.I18n;
 import com.star.sky.common.result.ResponseResult;
+import com.star.sky.common.utils.I18nUtil;
 import com.star.sky.common.utils.TokenUtil;
 import com.star.sky.member.entities.MemberBaseInfo;
 import com.star.sky.member.entities.ResponseToken;
 import com.star.sky.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,14 +27,14 @@ public class ApiAccessController {
     private MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseResult<String> register(MemberBaseInfo baseInfo) {
-        return ResponseResult.failed(HttpStatus.GATEWAY_TIMEOUT);
+    public ResponseResult<I18n> register(@Valid MemberBaseInfo baseInfo) {
+        memberService.register(baseInfo);
+        return ResponseResult.success(I18nUtil.getI18n("REGISTER_SUCCESS"));
     }
 
     @PostMapping(value = "/login")
     public ResponseResult<ResponseToken> login(@Valid MemberBaseInfo baseInfo) {
-        MemberBaseInfo info = memberService.getInfo(baseInfo);
-        return ResponseResult.success(new ResponseToken(TokenUtil.getToken(), info.getBase_phone(), 300));
+        return ResponseResult.success(new ResponseToken(TokenUtil.getToken(), baseInfo.getBase_phone()));
     }
 
     @PostMapping("/logout")

@@ -17,7 +17,7 @@ public class CacheConfigure {
     public static final Map<String, String[]> CACHE_CONFIG = new ConcurrentHashMap<>();
 
     static {
-        CACHE_CONFIG.put(C_TOKEN, new String[]{"300", CACHE_TYPE_STRING});
+        CACHE_CONFIG.put(C_TOKEN, new String[]{"2592000", CACHE_TYPE_STRING});
         CACHE_CONFIG.put(C_INDEX_LIST, new String[]{"-1", CACHE_TYPE_STRING});
     }
 

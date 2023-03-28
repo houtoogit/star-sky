@@ -1,5 +1,6 @@
 package com.star.sky.member.entities;
 
+import com.star.sky.common.configure.CacheConfigure;
 import lombok.Data;
 
 @Data
@@ -10,11 +11,11 @@ public class ResponseToken {
     private String token_type;
     private String access_token;
 
-    public ResponseToken(String access_token, String base_phone, long expires_in) {
+    public ResponseToken(String access_token, String base_phone) {
         this.base_phone = base_phone;
-        this.expires_in = expires_in;
         this.token_type = "access_token";
         this.access_token = access_token;
+        this.expires_in = Long.parseLong(CacheConfigure.CACHE_CONFIG.get(CacheConfigure.C_TOKEN)[0]);
     }
 
 }
