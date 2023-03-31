@@ -76,4 +76,10 @@ public class MemberServiceImpl extends ServiceImpl<MemberBaseInfoMapper, MemberB
         return new ResponseToken(access_token, phone);
     }
 
+    @Override
+    public void logout(String access_token, int uuid) {
+        redisTemplate.delete(access_token);
+        redisTemplate.delete(String.valueOf(uuid));
+    }
+
 }

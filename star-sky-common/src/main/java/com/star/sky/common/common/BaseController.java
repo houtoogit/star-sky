@@ -13,18 +13,18 @@ public class BaseController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     public Object getBaseInfo(String access_token) {
         return redisTemplate.opsForValue().get(access_token);
     }
 
     public int getUUID(String access_token) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
             Object result = redisTemplate.opsForValue().get(access_token);
-            Map map = mapper.convertValue(result, Map.class);
-            return (int) map.get("uuid");
+            return (int) mapper.convertValue(result, Map.class).get("uuid");
         } catch (Exception e) {
-            
+            log.error("object mapper parse error: {}", e.getMessage(), e);
             return 0;
         }
     }

@@ -34,15 +34,16 @@ public class ApiAccessController extends BaseController {
         return ResponseResult.success(I18nUtil.getI18n("REGISTER_SUCCESS"));
     }
 
-    @PostMapping(value = "/login")
+    @PostMapping("/login")
     public ResponseResult<ResponseToken> login(@Valid MemberBaseInfo baseInfo) {
         return ResponseResult.success(memberService.login(baseInfo.getPhone(), baseInfo.getPassword()));
     }
 
     @PostMapping("/logout")
-    public ResponseResult<String> logout(@RequestHeader("X-Auth-Token") String access_token) {
+    public ResponseResult logout(@RequestHeader("X-Auth-Token") String access_token) {
         int uuid = this.getUUID(access_token);
-        return ResponseResult.success("Ok");
+        memberService.logout(access_token, uuid);
+        return ResponseResult.success(null);
     }
 
 }

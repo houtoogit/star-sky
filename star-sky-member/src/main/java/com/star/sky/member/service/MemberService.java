@@ -7,8 +7,11 @@ import com.star.sky.member.entities.ResponseToken;
 public interface MemberService extends IService<MemberBaseInfo> {
 
     void register(String phone, String password);
-//    void logout(String access_token);
+
     ResponseToken login(String phone, String password);
+
+    void logout(String access_token, int uuid);
+
     MemberBaseInfo queryByPhone(String phone);
 
 }
