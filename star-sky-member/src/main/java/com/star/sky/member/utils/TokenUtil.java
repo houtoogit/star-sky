@@ -1,6 +1,8 @@
-package com.star.sky.common.utils;
+package com.star.sky.member.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
+
+import java.util.UUID;
 
 public class TokenUtil {
 
@@ -9,7 +11,7 @@ public class TokenUtil {
     }
 
     public static String getToken() {
-        return RandomStringUtils.randomNumeric(10) + "_" + RandomStringUtils.randomAlphanumeric(32);
+        return RandomStringUtils.randomNumeric(10) + "_" + UUID.randomUUID().toString().replace("-", "").toUpperCase();
     }
 
 }

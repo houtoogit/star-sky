@@ -2,52 +2,78 @@ package com.star.sky.member.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.star.sky.common.configure.CacheConfigure;
 import com.star.sky.common.exception.StarSkyException;
 import com.star.sky.common.utils.I18nUtil;
-import com.star.sky.common.utils.UUIDUtil;
 import com.star.sky.member.entities.MemberBaseInfo;
+import com.star.sky.member.entities.ResponseToken;
 import com.star.sky.member.mapper.MemberBaseInfoMapper;
 import com.star.sky.member.service.MemberService;
+import com.star.sky.member.utils.TokenUtil;
+import com.star.sky.member.utils.UUIDUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class MemberServiceImpl extends ServiceImpl<MemberBaseInfoMapper, MemberBaseInfo> implements MemberService {
 
     @Autowired
-    private MemberService memberService;
+    private RedisTemplate redisTemplate;
 
-    private MemberBaseInfo queryByUUID(int uuid) {
-        return memberService.getOne(Wrappers.<MemberBaseInfo>lambdaQuery().eq(MemberBaseInfo::getBase_uuid, uuid), false);
-    }
-
-    private MemberBaseInfo queryByPhone(String base_phone) {
-        return memberService.getOne(Wrappers.<MemberBaseInfo>lambdaQuery().eq(MemberBaseInfo::getBase_phone, base_phone), false);
+    private String getMD5Password(String password) {
+        return DigestUtils.md5DigestAsHex(password.getBytes());
     }
 
     @Override
-    public void register(MemberBaseInfo baseInfo) {
+    public MemberBaseInfo queryByPhone(String base_phone) {
+        return this.getOne(Wrappers.<MemberBaseInfo>lambdaQuery().eq(MemberBaseInfo::getPhone, base_phone), false);
+    }
+
+    @Override
+    public void register(String phone, String password) {
         int uuid;
-        String base_phone = baseInfo.getBase_phone();
-        String base_password = baseInfo.getBase_password();
+        MemberBaseInfo baseInfo = new MemberBaseInfo();
 
         do {
             uuid = UUIDUtil.nextUUID();
-        } while (this.queryByUUID(uuid) != null);
+        } while (this.getOne(Wrappers.<MemberBaseInfo>lambdaQuery().eq(MemberBaseInfo::getUuid, uuid), false) != null);
 
-        if (this.queryByPhone(base_phone) != null) {
+        if (this.queryByPhone(phone) != null) {
             throw new StarSkyException(HttpStatus.BAD_REQUEST, I18nUtil.getI18n("PHONE_NUMBER_ALREADY_EXIST"));
         }
 
-        baseInfo.setBase_uuid(uuid);
-        baseInfo.setBase_phone(base_phone);
-        baseInfo.setBase_register_time(new Date());
-        baseInfo.setBase_password(DigestUtils.md5DigestAsHex(base_password.getBytes()));
-        memberService.save(baseInfo);
+        baseInfo.setUuid(uuid);
+        baseInfo.setPhone(phone);
+        baseInfo.setRegisterTime(LocalDateTime.now());
+        baseInfo.setPassword(this.getMD5Password(password));
+        this.save(baseInfo);
+    }
+
+    @Override
+    public ResponseToken login(String phone, String password) {
+        MemberBaseInfo baseInfo = this.getOne(Wrappers.<MemberBaseInfo>lambdaQuery().eq(MemberBaseInfo::getPhone, phone)
+                .eq(MemberBaseInfo::getPassword, this.getMD5Password(password)), false);
+        if (baseInfo == null)
+            throw new StarSkyException(HttpStatus.BAD_REQUEST, I18nUtil.getI18n("PHONE_NUMBER_OR_PASSWORD_ERROR"));
+
+        String access_token = TokenUtil.getToken();
+        String uuid = String.valueOf(baseInfo.getUuid());
+
+        // 只允许一个用户登录 - 挤掉上次登录的用户
+        String old_token = (String) redisTemplate.opsForValue().get(uuid);
+        if (StringUtils.isNotBlank(old_token)) redisTemplate.delete(old_token);
+
+        redisTemplate.opsForValue().set(uuid, access_token, CacheConfigure.CACHE_TOKEN_EXPIRE_TIME, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(access_token, baseInfo, CacheConfigure.CACHE_TOKEN_EXPIRE_TIME, TimeUnit.SECONDS);
+
+        return new ResponseToken(access_token, phone);
     }
 
 }

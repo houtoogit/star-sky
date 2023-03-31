@@ -1,15 +1,15 @@
 CREATE TABLE IF NOT EXISTS member_base_info (
     id bigint NOT NULL UNIQUE,
-    base_uuid int NOT NULL UNIQUE,
-    base_country varchar(16) DEFAULT '86',
-    base_phone varchar(32) NOT NULL UNIQUE,
-    base_name varchar(255) DEFAULT NULL,
-    base_head_img varchar(128) DEFAULT NULL,
-    base_password char(32) DEFAULT NULL,
-    base_register_time timestamp NULL DEFAULT NULL,
-    base_state tinyint DEFAULT 0,
+    uuid int NOT NULL UNIQUE,
+    country varchar(16) DEFAULT '86',
+    phone varchar(32) NOT NULL UNIQUE,
+    username varchar(255) DEFAULT NULL,
+    head_img varchar(128) DEFAULT NULL,
+    password char(32) DEFAULT NULL,
+    register_time timestamp NULL DEFAULT NULL,
+    state tinyint DEFAULT 0,
     remark varchar(255) DEFAULT NULL,
     PRIMARY KEY (id),
-    KEY base_phone_index (base_phone),
-    KEY base_uuid_index (base_uuid)
+    KEY phone_index (phone),
+    KEY uuid_index (uuid)
 );

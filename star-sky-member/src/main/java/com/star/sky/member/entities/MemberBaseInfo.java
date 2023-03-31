@@ -1,14 +1,19 @@
 package com.star.sky.member.entities;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class MemberBaseInfo implements Serializable {
@@ -17,17 +22,20 @@ public class MemberBaseInfo implements Serializable {
 
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
-    private int base_uuid;
-    private String base_country;
+    private int uuid;
+    private String country;
     @Pattern(regexp = "1[3-9]\\d{9}", message = "PHONE_NUMBER_ERROR")
-    private String base_phone;
-    private String base_name;
-    private String base_head_img;
+    private String phone;
+    private String username;
+    private String headImg;
+    @TableField(select = false)
     @Length(min = 8, max = 16, message = "PASSWORD_ERROR")
-    private String base_password;
-    @DateTimeFormat(pattern = "YYYY-mm-dd HH:mm:ss")
-    private Date base_register_time;
-    private int base_state;
+    private String password;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime registerTime;
+    private int state;
     private String remark;
 
 }

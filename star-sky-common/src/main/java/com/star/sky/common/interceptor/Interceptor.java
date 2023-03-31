@@ -3,6 +3,7 @@ package com.star.sky.common.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.star.sky.common.exception.StarSkyException;
 import com.star.sky.common.result.ResponseResult;
+import com.star.sky.common.utils.I18nUtil;
 import com.star.sky.common.utils.RSAUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -42,39 +43,41 @@ public class Interceptor implements HandlerInterceptor {
             String access_sign = request.getHeader("X-Auth-Sign");
             String access_token = request.getHeader("X-Auth-Token");
 
-            if (StringUtils.isBlank(access_token)) throw new StarSkyException(HttpStatus.UNAUTHORIZED);
-
+            // todo check timestamp
             long current_timestamp = System.currentTimeMillis();
-            long api_timestamp = Long.parseLong(RSAUtil.decrypt(access_token.substring(43), RSAUtil.getPrivateKey(RSAUtil.PRIVATE_KEY)));
+            String encrypt_timestamp = access_sign.substring(32);
+            long api_timestamp = Long.parseLong(RSAUtil.decrypt(encrypt_timestamp, RSAUtil.getPrivateKey(RSAUtil.PRIVATE_KEY)));
             if (current_timestamp - api_timestamp > TIME_DIFF) throw new StarSkyException(HttpStatus.UNAUTHORIZED);
 
             // todo check token
-            access_token = access_token.substring(0, 43);
+            if (StringUtils.isBlank(access_token)) throw new StarSkyException(HttpStatus.UNAUTHORIZED);
             Object cache_info = redisTemplate.opsForValue().get(access_token);
             if (cache_info == null) throw new StarSkyException(HttpStatus.UNAUTHORIZED);
 
-            List<String> signs = Stream.of(access_token, String.valueOf(api_timestamp)).collect(Collectors.toList());
+            List<String> params = Stream.of(access_token, encrypt_timestamp).collect(Collectors.toList());
 
             if (GET.equals(method) || DELETE.equals(method)) {
-                Map params = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-                params.values().forEach(value -> signs.add(String.valueOf(value)));
+                Map param = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+                param.values().forEach(value -> params.add(String.valueOf(value)));
             }
 
             if (POST.equals(method) || PUT.equals(method)) {
-                Map<String, String[]> params = request.getParameterMap();
-                params.forEach((key, value) -> signs.add(String.valueOf(value[0])));
+                Map<String, String[]> param = request.getParameterMap();
+                param.forEach((key, value) -> params.add(String.valueOf(value[0])));
             }
 
-            Collections.sort(signs);
-            String curr_sign = DigestUtils.md5DigestAsHex(signs.stream().reduce("", (a, b) -> a + b).getBytes());
-            if (!curr_sign.equals(access_sign)) throw new StarSkyException(HttpStatus.UNAUTHORIZED);
+            // todo check sign
+            Collections.sort(params);
+            access_sign = access_sign.substring(0, 32);
+            String current_sign = DigestUtils.md5DigestAsHex(params.stream().reduce("", (a, b) -> a + b).getBytes());
+            if (!current_sign.equals(access_sign)) throw new StarSkyException(HttpStatus.UNAUTHORIZED);
             return true;
         } catch (Exception e) {
             response.setHeader("Content-type", "text/html;charset=UTF-8");
             response.setContentType("application/json;charset=utf-8");
             response.setCharacterEncoding("UTF-8");
             ObjectMapper mapper = new ObjectMapper();
-            response.getWriter().print(mapper.writeValueAsString(ResponseResult.failed(HttpStatus.UNAUTHORIZED)));
+            response.getWriter().print(mapper.writeValueAsString(ResponseResult.failed(HttpStatus.UNAUTHORIZED, I18nUtil.getI18n("UNAUTHORIZED"))));
             response.getWriter().close();
             log.error("interceptor error: {}", e.getMessage(), e);
             return false;

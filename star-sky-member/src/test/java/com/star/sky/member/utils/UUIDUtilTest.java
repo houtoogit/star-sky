@@ -1,4 +1,4 @@
-package com.star.sky.common.utils;
+package com.star.sky.member.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

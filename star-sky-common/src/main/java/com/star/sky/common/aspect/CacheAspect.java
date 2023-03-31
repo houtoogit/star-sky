@@ -48,8 +48,6 @@ public class CacheAspect {
 
         String key = this.getCacheKey(point, method, annotation.key());
         String prefix_key = this.getPrefixKey(key);
-        if (CacheConfigure.C_TOKEN.equals(prefix_key)) key = this.getSuffixKey(key);
-
         Object result = redisTemplate.opsForValue().get(key);
 
         if (result == null) {
@@ -68,7 +66,6 @@ public class CacheAspect {
 
         String key = this.getCacheKey(point, method, annotation.key());
         String prefix_key = this.getPrefixKey(key);
-        if (CacheConfigure.C_TOKEN.equals(prefix_key)) key = this.getSuffixKey(key);
 
         Object result = point.proceed();
         Long expire = redisTemplate.getExpire(key, TimeUnit.SECONDS);
@@ -84,9 +81,6 @@ public class CacheAspect {
         CacheEvict annotation = method.getAnnotation(CacheEvict.class);
 
         String key = this.getCacheKey(point, method, annotation.key());
-        String prefix_key = this.getPrefixKey(key);
-        if (CacheConfigure.C_TOKEN.equals(prefix_key)) key = this.getSuffixKey(key);
-
         Object result = point.proceed();
         redisTemplate.delete(key);
 
@@ -111,10 +105,6 @@ public class CacheAspect {
 
     private String getPrefixKey(String key) {
         return key.substring(0, key.indexOf("-"));
-    }
-
-    private String getSuffixKey(String key) {
-        return key.substring(key.indexOf("-") + 1, key.length());
     }
 
     private Method getMethod(ProceedingJoinPoint point) {
