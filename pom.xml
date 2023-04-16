@@ -7,6 +7,7 @@
     <modules>
         <module>star-sky-member</module>
         <module>star-sky-common</module>
+        <module>star-sky-package</module>
     </modules>
 
     <parent>
