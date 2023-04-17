@@ -15,7 +15,7 @@ public class JasyptConfigure implements StringEncryptor {
     public static final String PBE_ALGORITHMS_MD5_DES = "PBEWITHMD5ANDDES";
     public static final String PBE_WITH_HMAC_SHA512_AES_256 = "PBEWITHHMACSHA512ANDAES_256";
 
-    @Value("${jasypt.encryptor.password}")
+    @Value("${JASYPT_ENCRYPTOR_PASSWORD}")
     private String password;
 
     @Override

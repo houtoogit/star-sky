@@ -16,7 +16,7 @@ import static com.star.sky.common.utils.ThreadUtil.workThread;
 @Component
 public class InitDataService {
 
-    @Value("${app.version}")
+    @Value("${APP_VERSION}")
     private String currentVersion;
 
     @Value("${server.servlet.context-path}")
